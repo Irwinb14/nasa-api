@@ -36,9 +36,9 @@ function APODViewer() {
 
   return (
     <div>
-      <h1>Astronomy Picture of the Day Viewer</h1>
+      <h1 className='pageTitle'>Astronomy Picture of the Day</h1>
       <form onSubmit={handleSubmit}>
-        <label>
+        <label className='inputLabel'>
           Enter a Date (YYYY-MM-DD):
           <input
             type='text'
@@ -46,16 +46,14 @@ function APODViewer() {
             onChange={(e) => setDate(e.target.value)}
           />
         </label>
-        <button type='submit'>Get APOD</button>
+        <button className='submitButton' type='submit'>
+          Get APOD
+        </button>
       </form>
       {nasaData && (
         <div>
-          <h2>{nasaData.title}</h2>
-          <img
-            className='APOD_image'
-            src={nasaData.hdurl}
-            alt={nasaData.title}
-          />
+          <h2 className='imageTitle'>{nasaData.title}</h2>
+          <img className='APOD_image' src={nasaData.url} alt={nasaData.title} />
           <p>{nasaData.explanation}</p>
         </div>
       )}
