@@ -1,13 +1,13 @@
 import Image from 'next/image';
 import styles from './page.module.css';
 import APODViewer from '../../components/APOD';
-import { Cinzel } from 'next/font/google';
+import { News_Cycle } from 'next/font/google';
 
-const cinzel = Cinzel({ subsets: ['latin'] });
+const newsCycle = News_Cycle({ weight: '400', subsets: ['latin'] });
 
 export default function Home() {
   return (
-    <div className={cinzel.className}>
+    <div className={newsCycle.className}>
       <div className='HomeCard'>
         <APODViewer />
       </div>
