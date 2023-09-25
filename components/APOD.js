@@ -10,7 +10,6 @@ const NASA_API_URL = 'https://api.nasa.gov/planetary/apod';
 function APODViewer() {
   const [date, setDate] = useState(new Date());
   const [nasaData, setNasaData] = useState(null);
-  console.log('API Key:', process.env.NEXT_PUBLIC_NASA_API_KEY);
 
   const fetchAPODData = async (date) => {
     try {
@@ -32,8 +31,6 @@ function APODViewer() {
   };
 
   useEffect(() => {
-    // const today = new Date();
-    // setDate(today);
     fetchAPODData(date);
   }, []);
 
@@ -73,14 +70,6 @@ function APODViewer() {
       )}
     </div>
   );
-}
-
-{
-  /* <div>
-          <h2 className='imageTitle'>{nasaData.title}</h2>
-         
-          <img className='APOD_image' src={nasaData.url} alt={nasaData.title} />
-        </div> */
 }
 
 export default APODViewer;
