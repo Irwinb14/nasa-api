@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import YouTube from 'react-youtube';
 
 const NASA_API_URL = 'https://api.nasa.gov/planetary/apod';
 
@@ -30,6 +31,12 @@ function APODViewer() {
     fetchAPODData(date);
   };
 
+  const opts = {
+    playerVars: {
+      autoplay: 0,
+    },
+  };
+
   useEffect(() => {
     fetchAPODData(date);
   }, []);
@@ -52,22 +59,40 @@ function APODViewer() {
           </div>
           <button type='submit'>Get APOD</button>
         </div>
-      </form>
-      {nasaData && (
         <div>
-          <h2 className='imageTitle'>{nasaData.title}</h2>
-          <div className='image-container'>
-            <img
-              className='APOD_image'
-              src={nasaData.url}
-              alt={nasaData.title}
-            />
-            <div className='image-overlay'>
+          <p id='warningMssg'>
+            {date > new Date()
+              ? 'Selected date must be on or before today'
+              : null}
+          </p>
+        </div>
+      </form>
+      {nasaData &&
+        (nasaData.media_type === 'image' ? (
+          <div>
+            <h2 className='imageTitle'>{nasaData.title}</h2>
+            <div className='image-container'>
+              <img
+                className='APOD_image'
+                src={nasaData.url}
+                alt={nasaData.title}
+              />
+              <div className='image-overlay'>
+                <p>{nasaData.explanation}</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <h2 className='imageTitle'>{nasaData.title}</h2>
+            <div className='image-container'>
+              <a id='videoLink' href={nasaData.url} target='_blank'>
+                Video Link
+              </a>
               <p>{nasaData.explanation}</p>
             </div>
           </div>
-        </div>
-      )}
+        ))}
     </div>
   );
 }
