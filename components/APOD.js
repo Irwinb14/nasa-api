@@ -4,24 +4,34 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { RingLoader } from 'react-spinners';
+import { format } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 
 const NASA_API_URL = 'https://api.nasa.gov/planetary/apod';
 
 function APODViewer() {
   const [date, setDate] = useState(new Date());
   const [nasaData, setNasaData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchAPODData = async (date) => {
+    setIsLoading(true);
     try {
+      const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const zonedDate = utcToZonedTime(date, userTimeZone);
+
       const response = await axios.get(NASA_API_URL, {
         params: {
           api_key: process.env.NEXT_PUBLIC_NASA_API_KEY,
-          date: date.toISOString().slice(0, 10),
+          date: format(zonedDate, 'yyyy-MM-dd'),
         },
       });
       setNasaData(response.data);
     } catch (error) {
       console.error('Error fetching NASA data:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
   const useMediaQuery = (width) => {
@@ -65,7 +75,7 @@ function APODViewer() {
     <div className='pageContainer'>
       <h1 className='pageTitle'>
         Astronomy Picture of the Day (
-        {nasaData ? nasaData.date : date.toISOString().slice(0, 10)})
+        {nasaData ? nasaData.date : format(date, 'yyyy-MM-dd')})
       </h1>
       <form onSubmit={handleSubmit}>
         <div className='datePickerContainer'>
@@ -87,7 +97,12 @@ function APODViewer() {
           </p>
         </div>
       </form>
-      {nasaData &&
+      {isLoading ? (
+        <div className='loader-container'>
+          <RingLoader color='blueviolet' size={100} />
+        </div>
+      ) : (
+        nasaData &&
         (nasaData.media_type === 'image' ? (
           isBreakpoint ? (
             <div>
@@ -126,7 +141,8 @@ function APODViewer() {
               <p>{nasaData.explanation}</p>
             </div>
           </div>
-        ))}
+        ))
+      )}
     </div>
   );
 }
